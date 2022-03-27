@@ -1,20 +1,24 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import { AppNavigation } from './src/navigation/AppNavigation';
+import { PinScreen } from './src/screens/PinScreen';
+import { useFonts } from 'expo-font';
+
 
 export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(true)
+  const [loaded] = useFonts({
+    Inter: require('./assets/fonts/Inter-SemiBold.ttf')
+  });
+  
+  if (!loaded) {
+    return null;
+  }
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+    <>
       <StatusBar style="auto" />
-    </View>
-  );
+      { isLoggedIn ? <AppNavigation />: <PinScreen click={setIsLoggedIn} /> }
+    </>
+  )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
