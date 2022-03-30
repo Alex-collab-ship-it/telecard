@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity, ImageBackground } from "react-native"
 import Animated , { useAnimatedStyle, useSharedValue, withTiming, Easing } from "react-native-reanimated";
-import { THEME } from "../theme"
+import { THEME } from "../config"
 import { SimpleLineIcons, AntDesign } from '@expo/vector-icons';
 
 
@@ -31,7 +31,7 @@ export const Additionals = ({ navigation }) => {
     const [isPurchase,setIsPurchase] = useState(false)
     const [isInvestments,setIsInvestments] = useState(false)
     return (
-        <View style={styles.container}>
+        <View style={{flex: 1, backgroundColor: '#fff', paddingVertical: 8, marginTop: 10}}>
             <View style={{ width: '100%',  paddingHorizontal: 5, backgroundColor: '#fff', paddingTop: 15,  }}> 
 
                 <TouchableOpacity activeOpacity={1}  onPress={() => { cardHeight.value = cardHeight.value === 0 ? 120 : 0 }}>
@@ -44,19 +44,21 @@ export const Additionals = ({ navigation }) => {
                     </View> 
                 </TouchableOpacity>
                 <Animated.View style={[{ flexDirection: 'column', paddingHorizontal: 10,  }, card]}>
-                    <View style={{ width: '100%', paddingHorizontal: 10, flexDirection: 'row' }}>
-                        <View style={{ height: 50, width: THEME.WIDTH*0.1, marginRight: 17, justifyContent: 'center' }}>
-                            <ImageBackground style={{ width: 44, height: 29 }} source={require('../../assets/in-app-icons/visa.png')} />
-                        </View>
-
-                        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
-                            <View>
-                                <Text style={{ fontSize: 15, }}>Дебетовая карта</Text>
-                                <Text style={{ fontFamily: 'Inter', fontSize: 15, color: '#000' }}>{THEME.CARD_MONEY} ₽</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate('CardScreen')}>
+                        <View style={{ width: '100%', paddingHorizontal: 10, flexDirection: 'row' }}>
+                            <View style={{ height: 50, width: THEME.WIDTH*0.1, marginRight: 17, justifyContent: 'center' }}>
+                                <ImageBackground style={{ width: 44, height: 29 }} source={require('../../assets/in-app-icons/visa.png')} />
                             </View>
-                            <Text style={{ marginTop: 5,color: THEME.GRAY_COLOR }}>• 1334</Text> 
+
+                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
+                                <View>
+                                    <Text style={{ fontSize: 15, }}>Дебетовая карта</Text>
+                                    <Text style={{ fontFamily: 'Inter', fontSize: 15, color: '#000' }}>{THEME.CARD_MONEY} ₽</Text>
+                                </View>
+                                <Text style={{ marginTop: 5,color: THEME.GRAY_COLOR }}>• 1334</Text> 
+                            </View>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                 </Animated.View>
             </View>
             <View style={{ width: THEME.WIDTH*0.91, height: 0.9, backgroundColor: THEME.MENU_COLOR, alignSelf: 'center' }}></View>
@@ -69,7 +71,7 @@ export const Additionals = ({ navigation }) => {
             </TouchableOpacity>
             {isCredit ? (
                 <Animated.View>
-                    <View style={{ flexDirection: 'row', paddingHorizontal: 15 , height: 50, marginBottom: 10, alignItems: 'flex-start' }}>
+                    <View style={{ flexDirection: 'row', paddingHorizontal: 25 , height: 50, marginBottom: 10, alignItems: 'flex-start' }}>
                         <View style={{ width: THEME.WIDTH*0.1, height: THEME.WIDTH*0.1, justifyContent: 'center', alignItems: 'center',
                             marginRight: 10, backgroundColor: '#f0f2ff', borderRadius: 5 }}>
                             <AntDesign name="plus" size={24} color={THEME.MAIN_COLOR} />

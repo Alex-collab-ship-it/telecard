@@ -6,10 +6,14 @@ import { MainScreen } from "../screens/MainScreen";
 import { PinScreen } from "../screens/PinScreen";;
 import { Ionicons, Fontisto, Feather } from '@expo/vector-icons';
 import { SchetScreen } from "../screens/SchetScreen";
-import { THEME } from "../theme";
+import { THEME } from "../config";
 import { BillInfoScreen } from '../screens/BillInfoScreen';
 import { OperationsScreen } from '../screens/OperationsScreen';
 import { TransferScreen } from '../screens/transactions/Transfer';
+import { Confirm } from '../screens/transactions/Confirm';
+import { Success } from '../screens/transactions/Success';
+import { CardScreen } from '../screens/CardScreen';
+import { ChooseScreen } from '../screens/transactions/ChooseScreen';
 
 
 const Stack = createNativeStackNavigator()
@@ -37,8 +41,20 @@ function OScreen() {
     return (<OperationsScreen />)
 }
 
-function TransScreen() {
-    return (<TransferScreen />)
+function TransScreen({ navigation }) {
+    return (<TransferScreen navigation={navigation} />)
+}
+function ConfScreen({  navigation, route }) {
+    return (<Confirm navigation={navigation} route={route} />)
+}
+function SuccessScreen({ navigation }) {
+    return (<Success navigation={navigation} />)
+}
+function CardScr({ navigation }) {
+    return (<CardScreen navigation={navigation} />)
+}
+function ChScreen({ navigation }) {
+    return (<ChooseScreen navigation={navigation} />)
 }
 
 const styles = StyleSheet.create({
@@ -99,7 +115,9 @@ const BottomNavigator = () => {
 export const AppNavigation = () => {
     return (
         <NavigationContainer>
-            <Stack.Navigator>
+            <Stack.Navigator screenOptions={{
+                headerShadowVisible: false,
+            }}>
                 <Stack.Screen name="Main" component={BottomNavigator}
                     options={{
                         title: '  Кристина',
@@ -134,13 +152,14 @@ export const AppNavigation = () => {
                         headerStyle: {
                             backgroundColor: THEME.MENU_COLOR,
                         },
+                        headerTitleAlign: 'center',
                         headerTintColor: '#000',
                         headerShadowVisible: false,
                         headerRight: () => (<ImageBackground style={{ width: 35, height: 35 }} source={require('../../assets/in-app-icons/settings.png')} /> )
                     }}/>
                 <Stack.Screen name="BillInfoScreen" component={BScreen}
                     options={{
-                        title: 'adas',
+                        title: 'Счет',
                         headerShadowVisible: false,
                     }}/>
                 <Stack.Screen name="OperationsInfo" component={OScreen}
@@ -151,6 +170,29 @@ export const AppNavigation = () => {
                 <Stack.Screen name="Transfer" component={TransScreen}
                     options={{
                         title: 'Между счетами',
+                        headerTitleAlign: 'center',
+                    }}/>
+                <Stack.Screen name="Confirm" component={ConfScreen}
+                    options={{
+                        title: 'Проверьте данные',
+                        headerTitleAlign: 'center',
+                    }}/>
+                <Stack.Screen name="Success" component={SuccessScreen}
+                    options={{
+                        headerShown: false
+                    }}/>
+                <Stack.Screen name="CardScreen" component={CardScr}
+                    options={{
+                        headerStyle: {
+                            backgroundColor: THEME.MENU_COLOR,
+                        },
+                        title: 'Мои карты',
+                        headerTitleAlign: 'center',
+                        headerRight: () => (<ImageBackground style={{ width: 35, height: 35 }} source={require('../../assets/in-app-icons/settings.png')} /> )
+                    }}/>
+                <Stack.Screen name="Choose" component={ChScreen}
+                    options={{
+                        title: ''
                     }}/>
             </Stack.Navigator>
         </NavigationContainer>

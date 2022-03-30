@@ -1,16 +1,14 @@
 import { View, StyleSheet, Text, TouchableOpacity, ScrollView, ImageBackground } from "react-native"
 import { Fontisto, AntDesign } from '@expo/vector-icons';
-import { THEME } from "../theme";
+import { THEME } from "../config";
 
 
 export const SchetScreen = ({ navigation }) => {
     return (
-        <ScrollView style={styles.container} showsVerticalScrollIndicator={false} overScrollMode="never">
+        <ScrollView style={{ backgroundColor: '#fff' }} showsVerticalScrollIndicator={false} overScrollMode="never">
             <View style={{ width: THEME.WIDTH, padding: 25, backgroundColor: THEME.MENU_COLOR }} >
                 <View style={{ flexDirection: 'column', alignItems: 'center' }} >
-                    <View style={{ width: 40, height: 40, backgroundColor: "#323232", alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
-                        <ImageBackground style={{ width: 22, height: 22 }} source={require('../../assets/in-app-icons/white-document.jpg')}/>
-                    </View>
+                    <ImageBackground style={{ width: 40, height: 40 }} source={require('../../assets/in-app-icons/white-document.png')}/>
                     <Text style={{ color: "black", fontSize: 18, marginTop: 10 }}>Cчет</Text>
                     <Text style={{ color: THEME.GRAY_COLOR, fontSize: 18, fontFamily: 'Inter' }}>Управляй процентом</Text>
                     <View style={{ flexDirection: 'row', marginTop: 10 }}>
@@ -65,9 +63,6 @@ export const SchetScreen = ({ navigation }) => {
 
 
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: '#fff'
-    },
     actionWrapper: {
         flexDirection: 'column',
         alignItems: 'center',

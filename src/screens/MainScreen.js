@@ -2,7 +2,7 @@ import { useCallback, useState } from "react"
 import { ScrollView, StyleSheet, SafeAreaView, RefreshControl, ActivityIndicator } from "react-native"
 import { Additionals } from "../components/Additionals"
 import { CashBack } from "../components/CashBack"
-import { THEME } from "../theme";
+import { THEME } from "../config";
 
 const wait = timeout => {
     return new Promise(resolve => setTimeout(resolve, timeout));

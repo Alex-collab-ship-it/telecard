@@ -1,7 +1,7 @@
 import { View, StyleSheet, Text } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { MaterialIcons } from '@expo/vector-icons'
-import { THEME } from '../theme'
+import { THEME } from '../config'
 
 export const BillInfoScreen = () => {
     return (

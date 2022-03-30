@@ -1,14 +1,24 @@
-import { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native'
+import { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, FlatList } from 'react-native'
 import { AppLoader } from '../components/AppLoader';
-import { THEME } from '../theme'
+import { useDispatch, useSelector } from 'react-redux'
+import { THEME } from '../config'
+import { loadBill } from '../store/actions/transactionActions';
+
 
 const wait = timeout => {
     return new Promise(resolve => setTimeout(resolve, timeout));
 };
-export const OperationsScreen = () => {
 
+export const OperationsScreen = () => {
     const [refreshing, setRefreshing] = useState(true);
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(loadBill())
+    }, [dispatch])
+
+    const bill = useSelector(state => state.operations.bill)
 
     if (refreshing) {
         const f = async () => await wait(700).then(() => setRefreshing(false));
@@ -19,43 +29,22 @@ export const OperationsScreen = () => {
     }
 
     return (
-        <View style={{ flex: 1, alignItems: 'center', backgroundColor: '#fff', paddingBottom: 20, paddingHorizontal: 25 }}>
-            <View style={[styles.wrapper, { borderTopWidth: 0 }]}>
-                <View style={{ flexDirection: 'column' }}>
-                    <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 16}}>Пополнение на остаток по счету</Text>
-                    <Text style={{ color: THEME.GRAY_COLOR, fontSize: 12}}>01.03.2022</Text>
-                </View>
-                <Text style={{ fontSize: 17, fontWeight: 'bold'}}>+ 3750 ₽</Text>
+        <View style={{ flex: 1, alignItems: 'center', backgroundColor: '#fff', paddingBottom: 20, paddingHorizontal: 0 }}>
+            <FlatList style={{ flex: 1,width: THEME.WIDTH,  paddingHorizontal: 20 }}
+                ItemSeparatorComponent={() => (<View style={{ width: '100%', height: 0.5, backgroundColor: THEME.BORDER_COLOR }} />)}
+                data={bill} keyExtractor={item => item.id} renderItem={({ item }) => <Transaction item={item}/>} />
+        </View>
+    )
+}
+
+function Transaction({ item }) {
+    return (
+        <View style={styles.wrapper}>
+            <View style={{ flexDirection: 'column' }}>
+                <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 16}}>{item.type}</Text>
+                <Text style={{ color: THEME.GRAY_COLOR, fontSize: 12}}>{item.date}</Text>
             </View>
-            <View style={styles.wrapper}>
-                <View style={{ flexDirection: 'column' }}>
-                    <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 16}}>Пополнение на остаток по счету</Text>
-                    <Text style={{ color: THEME.GRAY_COLOR, fontSize: 12}}>01.02.2022</Text>
-                </View>
-                <Text style={{ fontSize: 17, fontWeight: 'bold'}}>+ 3750 ₽</Text>
-            </View>
-            <View style={styles.wrapper}>
-                <View style={{ flexDirection: 'column' }}>
-                    <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 16}}>Пополнение на остаток по счету</Text>
-                    <Text style={{ color: THEME.GRAY_COLOR, fontSize: 12}}>01.01.2022</Text>
-                </View>
-                <Text style={{ fontSize: 17, fontWeight: 'bold'}}>+ 3750 ₽</Text>
-            </View>
-            <View style={styles.wrapper}>
-                <View style={{ flexDirection: 'column' }}>
-                    <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 16}}>Пополнение на остаток по счету</Text>
-                    <Text style={{ color: THEME.GRAY_COLOR, fontSize: 12}}>01.12.2021</Text>
-                </View>
-                <Text style={{ fontSize: 17, fontWeight: 'bold'}}>+ 3750 ₽</Text>
-            </View>
-            <View style={styles.wrapper}>
-                <View style={{ flexDirection: 'column' }}>
-                    <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 16}}>Пополнение</Text>
-                    <Text style={{ color: THEME.GRAY_COLOR, fontSize: 12}}>01.11.2021</Text>
-                </View>
-                <Text style={{ fontSize: 17, fontWeight: 'bold'}}>+ 500 000 ₽</Text>
-            </View>
-                
+            <Text style={{ fontSize: 17, fontWeight: 'bold'}}>{item.amount} ₽</Text>
         </View>
     )
 }
@@ -66,7 +55,5 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingVertical: 20,
-        borderTopColor: THEME.BORDER_COLOR,
-        borderTopWidth: 0.3,
     }
 })

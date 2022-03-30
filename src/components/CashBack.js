@@ -1,5 +1,5 @@
 import {  View, StyleSheet, ImageBackground } from "react-native"
-import { THEME } from '../theme'
+import { THEME } from '../config'
 
 export const CashBack = () => {
     return (
