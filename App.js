@@ -6,6 +6,7 @@ import { AppNavigation } from './src/navigation/AppNavigation';
 import { PinScreen } from './src/screens/PinScreen';
 import store from './src/store'
 import { bootstrap } from './src/bootstrap';
+import { formatMobileNumber, onlyDigits } from './src/config';
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(true)
@@ -19,6 +20,7 @@ export default function App() {
       />
     )
   }
+
   return (
     <Provider store={store}>
       <StatusBar style="auto" />

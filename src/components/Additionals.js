@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity, ImageBackground } from "react-native"
 import Animated , { useAnimatedStyle, useSharedValue, withTiming, Easing } from "react-native-reanimated";
-import { THEME } from "../config"
+import { THEME, toRoubles } from "../config"
 import { SimpleLineIcons, AntDesign } from '@expo/vector-icons';
 
 
-export const Additionals = ({ navigation }) => {
+export const Additionals = ({ navigation, balance }) => {
+
+
     const cardHeight = useSharedValue(0);
     const card = useAnimatedStyle(() => {
         return {
@@ -26,7 +28,6 @@ export const Additionals = ({ navigation }) => {
             opacity: billHeight.value === 0 ? 1 : 0
         }
     });
-    
     const [isCredit,setIsCredit] = useState(false)
     const [isPurchase,setIsPurchase] = useState(false)
     const [isInvestments,setIsInvestments] = useState(false)
@@ -44,7 +45,7 @@ export const Additionals = ({ navigation }) => {
                     </View> 
                 </TouchableOpacity>
                 <Animated.View style={[{ flexDirection: 'column', paddingHorizontal: 10,  }, card]}>
-                    <TouchableOpacity onPress={() => navigation.navigate('CardScreen')}>
+                    <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.navigate('CardScreen')}>
                         <View style={{ width: '100%', paddingHorizontal: 10, flexDirection: 'row' }}>
                             <View style={{ height: 50, width: THEME.WIDTH*0.1, marginRight: 17, justifyContent: 'center' }}>
                                 <ImageBackground style={{ width: 44, height: 29 }} source={require('../../assets/in-app-icons/visa.png')} />
@@ -53,9 +54,9 @@ export const Additionals = ({ navigation }) => {
                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
                                 <View>
                                     <Text style={{ fontSize: 15, }}>Дебетовая карта</Text>
-                                    <Text style={{ fontFamily: 'Inter', fontSize: 15, color: '#000' }}>{THEME.CARD_MONEY} ₽</Text>
+                                    <Text style={{ fontFamily: 'Inter', fontSize: 15, color: '#000' }}>{toRoubles(balance.card)}</Text>
                                 </View>
-                                <Text style={{ marginTop: 5,color: THEME.GRAY_COLOR }}>• 1334</Text> 
+                                <Text style={{ marginTop: 5,color: THEME.GRAY_COLOR }}>{THEME.CARD}</Text> 
                             </View>
                         </View>
                     </TouchableOpacity>
@@ -113,7 +114,7 @@ export const Additionals = ({ navigation }) => {
             </TouchableOpacity>
 
             <Animated.View style={bill}>
-                <TouchableOpacity onPress={() => navigation.navigate('Schet')}>
+                <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.navigate('Schet')}>
                     <View style={[styles.wrapper, {marginLeft: 5}]}>
                         <View style={{ width: 40, height: 40, backgroundColor: THEME.MENU_COLOR, alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
                             <ImageBackground style={{ width: 22, height: 22 }} source={require('../../assets/in-app-icons/document.png')}/>
@@ -121,7 +122,7 @@ export const Additionals = ({ navigation }) => {
                         <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginLeft: 20 }}>
                             <View>
                                 <Text style={{ fontWeight: '400', fontSize: 15, color: '#000' }}>Управляй процентом</Text>
-                                <Text style={{ fontFamily: 'Inter', fontSize: 15, color: "black" }}>{THEME.MONEY} ₽</Text>
+                                <Text style={{ fontFamily: 'Inter', fontSize: 15, color: "black" }}>{toRoubles(balance.bill)}</Text>
                             </View>
                             <Text style={{ color: THEME.GRAY_COLOR, marginRight: 5 }}>• 8476</Text>
                         </View>

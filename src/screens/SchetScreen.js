@@ -1,9 +1,20 @@
 import { View, StyleSheet, Text, TouchableOpacity, ScrollView, ImageBackground } from "react-native"
 import { Fontisto, AntDesign } from '@expo/vector-icons';
 import { THEME } from "../config";
+import { useDispatch, useSelector } from "react-redux";
+import { loadBalance } from "../store/actions/transactionActions";
+import { useEffect } from "react";
 
 
 export const SchetScreen = ({ navigation }) => {
+
+    const dispatch = useDispatch()
+    useEffect(() => {
+        dispatch(loadBalance())
+    }, [dispatch])
+    const balance = useSelector(state => state.operations.balance)
+    
+
     return (
         <ScrollView style={{ backgroundColor: '#fff' }} showsVerticalScrollIndicator={false} overScrollMode="never">
             <View style={{ width: THEME.WIDTH, padding: 25, backgroundColor: THEME.MENU_COLOR }} >
@@ -12,7 +23,7 @@ export const SchetScreen = ({ navigation }) => {
                     <Text style={{ color: "black", fontSize: 18, marginTop: 10 }}>Cчет</Text>
                     <Text style={{ color: THEME.GRAY_COLOR, fontSize: 18, fontFamily: 'Inter' }}>Управляй процентом</Text>
                     <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                        <Text style={{ color: '#000', fontSize: 30, marginRight: 10, fontFamily: 'Inter',}}>{THEME.MONEY}</Text>
+                        <Text style={{ color: '#000', fontSize: 30, marginRight: 10, fontFamily: 'Inter',}}>{balance.bill}</Text>
                         <Text style={{ color: THEME.BORDER_COLOR, fontSize: 30, fontWeight: '700'}}>₽</Text>
                     </View>
                 </View>
@@ -25,7 +36,7 @@ export const SchetScreen = ({ navigation }) => {
                         <Text style={{ color: 'black', fontSize: 14, marginTop: 12 }}>Пополнить</Text>
                     </View>
                     <View style={styles.actionWrapper}>
-                        <TouchableOpacity onPress={() => navigation.navigate('Transfer')}>
+                        <TouchableOpacity onPress={() => navigation.navigate('Transfer', { balance: balance })}>
                             <View style={styles.actions}>
                                 <Fontisto name="arrow-swap" size={20} color="black" style={{ opacity: 1 }} />
                             </View>

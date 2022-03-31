@@ -1,3 +1,6 @@
 export const LOAD_ALL = 'LOAD_ALL'
 export const LOAD_CARD = 'LOAD_CARD'
 export const LOAD_BILL = 'LOAD_BILL'
+export const LOAD_BALANCE = 'LOAD_BALANCE'
+export const ADD_CARD = 'ADD_CARD'
+export const ADD_BILL = 'ADD_BILL'

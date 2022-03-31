@@ -2,31 +2,45 @@ import { useEffect } from 'react';
 import { View, Text, ImageBackground, StyleSheet, TouchableOpacity, FlatList } from 'react-native'
 import { Fontisto, AntDesign, Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { THEME } from '../config'
-import { loadCard } from '../store/actions/transactionActions';
+import { THEME, toOparationFormat, toRoubles } from '../config'
+import { load } from '../store/actions/transactionActions';
+import { AppLoader } from '../components/AppLoader';
 
+const wait = timeout => {
+    return new Promise(resolve => {setTimeout(resolve, timeout)});
+}
 export const CardScreen = ({ navigation }) => {
 
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(loadCard())
+        dispatch(load('card'))
     }, [dispatch])
 
-    const card = useSelector(state => state.operations.card.slice(0, 3))
+    const card = useSelector(state => state.operations.card)
+    const loading = useSelector(state => state.operations.card.loading)
+
+    if (loading || loading === undefined ) {
+        return (
+          <AppLoader size={'large'} />
+        )
+    }
+    
+
     return (
         <View style={{ backgroundColor: '#fff', flex: 1 }}>
             <View style={{ width: THEME.WIDTH, padding: 25, backgroundColor: THEME.MENU_COLOR }} >
                 <View style={{ flexDirection: 'column', alignItems: 'center' }} >
-                    <ImageBackground style={{ height: 130, width: 195, padding: 12, flexDirection: 'column', justifyContent: 'space-between' }} source={require('../../assets/in-app-icons/bigvisa.png')} >
+                    <ImageBackground style={{ height: 130, width: 195, padding: 12, flexDirection: 'column', justifyContent: 'space-between' }}
+                        source={require('../../assets/in-app-icons/bigvisa.png')} >
                         <View style={{ width: '100%' }}>
                             <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <Text style={{ color: '#fff', fontSize: 11, fontWeight: '300' }}>Дебетовая карта</Text>
                                 <Text style={{ color: '#fff', fontSize: 12, fontWeight: '700' }}>{THEME.CARD}</Text>
                             </View>
                             <View style={{ flexDirection: 'row', marginTop: 5, }} >
-                                <Text style={{ fontSize: 25, color: '#fff', fontFamily: 'Inter'}}>{THEME.CARD_MONEY}</Text>
-                                <Text style={{ fontSize: 25, color: THEME.GRAY_COLOR, fontFamily: 'Inter'}}> ₽</Text>
+                                <Text style={{ fontSize: 22, color: '#fff', fontFamily: 'Inter'}}>{toRoubles(card.balance).replace(' ₽', '')}</Text>
+                                <Text style={{ fontSize: 22, color: THEME.GRAY_COLOR, fontFamily: 'Inter'}}> ₽</Text>
                             </View>
                         </View>
                         <Text style={{ color: THEME.GRAY_COLOR, fontSize: 12, fontWeight: '700' }}>05/24</Text>
@@ -80,7 +94,7 @@ export const CardScreen = ({ navigation }) => {
             <View style={{ paddingHorizontal: 24, marginTop: 20, flexDirection: 'column' }}>
                 <Text style={{ color: THEME.GRAY_COLOR, fontSize: 12, fontFamily: 'InterRegular' }}>Недавние операции</Text>
                 <Text style={{ color: THEME.GRAY_COLOR, fontSize: 12, fontFamily: 'InterRegular',marginVertical: 20 }}>Сегодня</Text>
-                <FlatList data={card} renderItem={({ item }) => <Transaction item={item}/>}
+                <FlatList data={card.transactions.slice(0,3)} renderItem={({ item }) => <Transaction item={item}/>}
                     ItemSeparatorComponent={() => (<View style={{ width: '100%', height: 0.5, backgroundColor: THEME.BORDER_COLOR, marginVertical: 8 }} />)} />
             </View>
         </View>
@@ -95,8 +109,8 @@ function Transaction({ item }) {
                 <Text style={{ color: THEME.GRAY_COLOR, fontSize: 12, fontFamily: 'InterRegular' }}>{item.type}</Text>
             </View>
             { item.amount.includes('-') ? 
-                <Text style={{ fontFamily: 'Inter' }}>{item.amount}  ₽</Text>
-            : <Text style={{ fontFamily: 'InterBold', color: THEME.MAIN_COLOR }}> + {item.amount}  ₽</Text>}
+                <Text style={{ fontFamily: 'Inter' }}>{toOparationFormat(item.amount)}</Text>
+            : <Text style={{ fontFamily: 'InterBold', color: THEME.MAIN_COLOR }}>{toOparationFormat(item.amount)}</Text>}
         </View>
     )
 }

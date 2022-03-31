@@ -2,37 +2,30 @@ import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native'
 import { AppLoader } from '../components/AppLoader';
 import { useDispatch, useSelector } from 'react-redux'
-import { THEME } from '../config'
-import { loadBill } from '../store/actions/transactionActions';
+import { THEME, toOparationFormat } from '../config'
+import { load } from '../store/actions/transactionActions';
 
 
-const wait = timeout => {
-    return new Promise(resolve => setTimeout(resolve, timeout));
-};
+
 
 export const OperationsScreen = () => {
-    const [refreshing, setRefreshing] = useState(true);
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(loadBill())
+        dispatch(load('bill'))
     }, [dispatch])
-
     const bill = useSelector(state => state.operations.bill)
-
-    if (refreshing) {
-        const f = async () => await wait(700).then(() => setRefreshing(false));
-        f()
+    const loading = bill.loading
+    if (loading) {
         return (
-            <AppLoader size={'large'} />
+          <AppLoader size={'large'} />
         )
     }
-
     return (
         <View style={{ flex: 1, alignItems: 'center', backgroundColor: '#fff', paddingBottom: 20, paddingHorizontal: 0 }}>
             <FlatList style={{ flex: 1,width: THEME.WIDTH,  paddingHorizontal: 20 }}
                 ItemSeparatorComponent={() => (<View style={{ width: '100%', height: 0.5, backgroundColor: THEME.BORDER_COLOR }} />)}
-                data={bill} keyExtractor={item => item.id} renderItem={({ item }) => <Transaction item={item}/>} />
+                data={bill.transactions} keyExtractor={item => item.id} renderItem={({ item }) => <Transaction item={item}/>} />
         </View>
     )
 }
@@ -44,7 +37,7 @@ function Transaction({ item }) {
                 <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 16}}>{item.type}</Text>
                 <Text style={{ color: THEME.GRAY_COLOR, fontSize: 12}}>{item.date}</Text>
             </View>
-            <Text style={{ fontSize: 17, fontWeight: 'bold'}}>{item.amount} ₽</Text>
+            <Text style={{ fontSize: 17, fontWeight: 'bold'}}>{toOparationFormat(item.amount)}</Text>
         </View>
     )
 }

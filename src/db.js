@@ -17,13 +17,7 @@ export class DB {
                     [],
                     resolve,
                     (_, error) => reject(error)
-                    )
-                // tx.executeSql(
-                //     'DELETE FROM bill_transactions',
-                //     [],
-                //     (_, result) => resolve(result.rows._array),
-                //     (_, error) => reject(error)
-                // )
+                )
                 tx.executeSql(
                     'SELECT COUNT(*) as [count] FROM bill_transactions',
                     [],
@@ -42,40 +36,83 @@ export class DB {
                     (_, error) => reject(error)
                 )
                 tx.executeSql(
-                    'SELECT COUNT(*) as [count] FROM card_transactions',
+                    'DELETE FROM card_transactions',
                     [],
-                    (_, result) => {
-
-                        if ( result.rows._array[0].count === 0) {
-                            data.card.transactions.forEach(t => {
-                                console.log(t)
-                                tx.executeSql(
-                                    'INSERT INTO card_transactions (title, type, amount) VALUES (?,?,?)',
-                                    [t.title, t.type, t.amount],
-                                    (_, result) => resolve(result.rows._array),
-                                    (_, error) => reject(error)
-                                )
-                            });
-                        }
-                    },
-                    (_, error) => reject(error)
+                    resolve,
+                    reject
                 )
-                tx.executeSql(
-                    'SELECT COUNT(*) as [count] FROM card_transactions',
-                    [],
-                    (_, result) => console.log(result),
-                    (_, error) => reject(error)
-                )
+                // tx.executeSql(
+                //     'SELECT COUNT(*) as [count] FROM card_transactions',
+                //     [],
+                //     (_, result) => {
+    
+                //         if ( result.rows._array[0].count === 0) {
+                //             data.card.transactions.forEach(t => {
+                //                 tx.executeSql(
+                //                     'INSERT INTO card_transactions (title, type, amount) VALUES (?,?,?)',
+                //                     [t.title, t.type, t.amount],
+                //                     (_, result) => resolve(result.rows._array),
+                //                     (_, error) => reject(error)
+                //                 )
+                //             });
+                //         }
+                //     },
+                //     (_, error) => reject(error)
+                // )
             })
-          })
+        })
     }
-    static getTransactions(acc) {
+    static getTransactions(table) {
         return new Promise((resolve, reject) => {
             db.transaction(tx => {
                 tx.executeSql(
-                    `SELECT * FROM ${acc}_transactions`, 
+                    `SELECT * FROM ${table}_transactions ORDER BY id DESC`, 
                     [],
-                    (_, result) => resolve(result.rows._array),
+                    (_, result) => {
+                        let x = 0;
+                        result.rows._array.forEach(item => x += Number(item.amount))
+                        resolve( { transactions: result.rows._array, balance: x.toString() })
+                    },
+                    (_, error) => reject(error)
+                )
+            })
+        })
+    }
+    static addCard(data){
+        return new Promise((resolve, reject) => {
+            db.transaction(tx => {
+                tx.executeSql(
+                    `INSERT INTO card_transactions (title, type, amount) VALUES (?,?,?)`, 
+                    [data.title, data.type, data.amount],
+                    resolve,
+                    (_, error) => reject(error)
+                )
+            })
+        })
+    }
+    static addBill(data){
+        return new Promise((resolve, reject) => {
+            db.transaction(tx => {
+                tx.executeSql(
+                    `INSERT INTO bill_transactions (type, date, amount) VALUES (?,?,?)`, 
+                    [data.type, data.date, data.amount],
+                    resolve,
+                    (_, error) => reject(error)
+                )
+            })
+        })
+    }
+    static loadBalance(table) {
+        return new Promise((resolve, reject) => {
+            db.transaction(tx => {
+                tx.executeSql(
+                    `SELECT amount FROM ${table}_transactions`, 
+                    [],
+                    (_, result) => {
+                        let x = 0;
+                        result.rows._array.forEach(item => x += Number(item.amount))
+                        resolve(x.toString())
+                    },
                     (_, error) => reject(error)
                 )
             })

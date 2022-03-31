@@ -9,11 +9,15 @@ import { SchetScreen } from "../screens/SchetScreen";
 import { THEME } from "../config";
 import { BillInfoScreen } from '../screens/BillInfoScreen';
 import { OperationsScreen } from '../screens/OperationsScreen';
-import { TransferScreen } from '../screens/transactions/Transfer';
-import { Confirm } from '../screens/transactions/Confirm';
-import { Success } from '../screens/transactions/Success';
+import { TransferScreen } from '../screens/transactions/bill/Transfer';
+import { Confirm } from '../screens/transactions/bill/Confirm';
+import { Success } from '../screens/transactions/bill/Success';
 import { CardScreen } from '../screens/CardScreen';
-import { ChooseScreen } from '../screens/transactions/ChooseScreen';
+import { ChooseScreen } from '../screens/transactions/card/ChooseScreen';
+import { CardTransfer } from '../screens/transactions/card/Transfer';
+import { TypeScreen } from '../screens/transactions/card/TypeScreen';
+import { CardConfirm } from '../screens/transactions/card/Confirm';
+import { CardSuccess } from '../screens/transactions/card/Success';
 
 
 const Stack = createNativeStackNavigator()
@@ -41,14 +45,20 @@ function OScreen() {
     return (<OperationsScreen />)
 }
 
-function TransScreen({ navigation }) {
-    return (<TransferScreen navigation={navigation} />)
+function TransScreen({ navigation, route }) {
+    return (<TransferScreen navigation={navigation} route={route} />)
 }
 function ConfScreen({  navigation, route }) {
     return (<Confirm navigation={navigation} route={route} />)
 }
+function CardConfScreen({  navigation, route }) {
+    return (<CardConfirm navigation={navigation} route={route} />)
+}
 function SuccessScreen({ navigation }) {
     return (<Success navigation={navigation} />)
+}
+function CardScsScreen({ navigation }) {
+    return (<CardSuccess navigation={navigation} />)
 }
 function CardScr({ navigation }) {
     return (<CardScreen navigation={navigation} />)
@@ -56,61 +66,12 @@ function CardScr({ navigation }) {
 function ChScreen({ navigation }) {
     return (<ChooseScreen navigation={navigation} />)
 }
-
-const styles = StyleSheet.create({
-    ico: {
-        width: 25,
-        height: 25
-    }
-})
-
-const BottomNavigator = () => {
-    return (
-        <Tab.Navigator
-            headerStyle={{
-                backgroundColor: THEME.MENU_COLOR
-            }}
-            screenOptions={({ route }) => ({
-                tabBarIcon: ({ focused, color, size }) => {
-      
-                  if (route.name === 'Главный') {
-                    icon = focused
-                      ? <ImageBackground style={styles.ico} source={require('../../assets/in-app-icons/menu-active.png')}/>
-                      : <ImageBackground style={styles.ico} source={require('../../assets/in-app-icons/menu-icon.png')}/>;
-                  } else if (route.name === 'Переводы') {
-                    icon = focused ? <Fontisto name="arrow-swap" size={24} color={color} style={{ opacity: 1 }} /> : 
-                    <Fontisto name="arrow-swap" size={24} color={color} style={{ opacity: 1 }} />;
-                  } else {
-                      icon = focused ? <Feather name="more-horizontal" size={40} color={color} /> :
-                      <Feather name="more-horizontal" size={40} color={color} />
-                  }
-                  return icon;
-                },
-                tabBarActiveTintColor: THEME.MAIN_COLOR,
-                tabBarInactiveTintColor: 'black',
-                headerShown: false,
-                tabBarLabelStyle: {
-                    fontSize: 11,
-                    fontWeight: 'bold'
-                },
-                tabBarStyle: {
-                    alignItems: 'flex-end',
-                    backgroundColor: THEME.MENU_COLOR,
-                    height: 75,
-                    paddingBottom: 15,
-                    borderTopWidth: 0,
-                    borderTopLeftRadius: 15,
-                    borderTopRightRadius: 15
-                }
-              })}
-            >
-            <Tab.Screen name="Главный" component={HomeScreen}/>
-            <Tab.Screen name="Переводы" component={HomeScreen} />
-            <Tab.Screen name="Еще" component={HomeScreen} />
-        </Tab.Navigator>
-    );
+function CardTrasferScreen({ navigation, route }) {
+    return (<CardTransfer navigation={navigation} route={route} />)
 }
-
+function TypeScr({ navigation, route }) {
+    return (<TypeScreen navigation={navigation} route={route} />)
+}
 
 export const AppNavigation = () => {
     return (
@@ -181,6 +142,10 @@ export const AppNavigation = () => {
                     options={{
                         headerShown: false
                     }}/>
+                <Stack.Screen name="CardSuccess" component={CardScsScreen}
+                    options={{
+                        headerShown: false
+                    }}/>
                 <Stack.Screen name="CardScreen" component={CardScr}
                     options={{
                         headerStyle: {
@@ -194,9 +159,76 @@ export const AppNavigation = () => {
                     options={{
                         title: ''
                     }}/>
+                <Stack.Screen name="CardTransfer" component={CardTrasferScreen}
+                    options={{
+                        title: 'Перевод'
+                    }}/>
+                <Stack.Screen name="TypeScreen" component={TypeScr}
+                    options={{
+                        title: 'Способ перевода'
+                    }}/>
+                <Stack.Screen name="CardConfirm" component={CardConfScreen}
+                    options={{
+                        headerTitle: () => (<ImageBackground style={{ width: 70, height: 35 }} source={require('../../assets/in-app-icons/sbp.png')} />),
+                        headerTitleAlign: 'center',
+                    }}/>
             </Stack.Navigator>
         </NavigationContainer>
       );
+}
+
+const styles = StyleSheet.create({
+    ico: {
+        width: 25,
+        height: 25
+    }
+})
+
+const BottomNavigator = () => {
+    return (
+        <Tab.Navigator
+            headerStyle={{
+                backgroundColor: THEME.MENU_COLOR
+            }}
+            screenOptions={({ route }) => ({
+                tabBarIcon: ({ focused, color, size }) => {
+      
+                  if (route.name === 'Главный') {
+                    icon = focused
+                      ? <ImageBackground style={styles.ico} source={require('../../assets/in-app-icons/menu-active.png')}/>
+                      : <ImageBackground style={styles.ico} source={require('../../assets/in-app-icons/menu-icon.png')}/>;
+                  } else if (route.name === 'Переводы') {
+                    icon = focused ? <Fontisto name="arrow-swap" size={24} color={color} style={{ opacity: 1 }} /> : 
+                    <Fontisto name="arrow-swap" size={24} color={color} style={{ opacity: 1 }} />;
+                  } else {
+                      icon = focused ? <Feather name="more-horizontal" size={40} color={color} /> :
+                      <Feather name="more-horizontal" size={40} color={color} />
+                  }
+                  return icon;
+                },
+                tabBarActiveTintColor: THEME.MAIN_COLOR,
+                tabBarInactiveTintColor: 'black',
+                headerShown: false,
+                tabBarLabelStyle: {
+                    fontSize: 11,
+                    fontWeight: 'bold'
+                },
+                tabBarStyle: {
+                    alignItems: 'flex-end',
+                    backgroundColor: THEME.MENU_COLOR,
+                    height: 75,
+                    paddingBottom: 15,
+                    borderTopWidth: 0,
+                    borderTopLeftRadius: 15,
+                    borderTopRightRadius: 15
+                }
+              })}
+            >
+            <Tab.Screen name="Главный" component={HomeScreen}/>
+            <Tab.Screen name="Переводы" component={HomeScreen} />
+            <Tab.Screen name="Еще" component={HomeScreen} />
+        </Tab.Navigator>
+    );
 }
 
 

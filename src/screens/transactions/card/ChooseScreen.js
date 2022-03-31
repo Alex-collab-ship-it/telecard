@@ -1,19 +1,21 @@
-import { View, Text, StyleSheet, ImageBackground } from 'react-native'
+import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native'
 import { Ionicons, Fontisto } from '@expo/vector-icons';
-import { THEME } from '../../config';
+import { THEME } from '../../../config';
 
 export const ChooseScreen = ({ navigation }) => {
     return(
         <View style={{ flex: 1, backgroundColor: '#fff', paddingHorizontal: 15 }}>
             <Text style={{ fontFamily: 'InterBold', fontSize: 18, marginBottom: 20, paddingLeft: 10 }}>Выберите перевод</Text>
-            <View style={styles.container}>
-                <View style={styles.icon}>
-                    <Ionicons name="ios-call-outline" size={24} color="black" />
+            <TouchableOpacity activeOpacity={1} onPress={() => navigation.navigate('CardTransfer')}>
+                <View style={styles.container}>
+                    <View style={styles.icon}>
+                        <Ionicons name="ios-call-outline" size={24} color="black" />
+                    </View>
+                    <View style={styles.inner}>
+                        <Text style={styles.text}>По номеру телефона, карты или счета</Text>
+                    </View>
                 </View>
-                <View style={styles.inner}>
-                    <Text style={styles.text}>По номеру телефона, карты или счета</Text>
-                </View>
-            </View>
+            </TouchableOpacity>
             <View style={styles.container}>
                 <View style={styles.icon}>
                     <Fontisto name="arrow-swap" size={20} color="black" />
@@ -24,7 +26,7 @@ export const ChooseScreen = ({ navigation }) => {
             </View>
             <View style={styles.container}>
                 <View style={styles.icon}>
-                    <ImageBackground style={{ width: 25, height: 25 }} source={require('../../../assets/in-app-icons/govno.jpg')} />
+                    <ImageBackground style={{ width: 25, height: 25 }} source={require('../../../../assets/in-app-icons/govno.jpg')} />
                 </View>
                 <View style={styles.inner}>
                     <Text style={styles.text}>Между своими счетами</Text>
@@ -32,7 +34,7 @@ export const ChooseScreen = ({ navigation }) => {
             </View>
             <View style={styles.container}>
                 <View style={styles.icon}>
-                    <ImageBackground style={{ width: 25, height: 25 }} source={require('../../../assets/in-app-icons/zalupa.jpg')} />
+                    <ImageBackground style={{ width: 25, height: 25 }} source={require('../../../../assets/in-app-icons/zalupa.jpg')} />
                 </View>
                 <View style={styles.inner}>
                     <Text style={styles.text}>Между своими счетами</Text>
@@ -40,7 +42,7 @@ export const ChooseScreen = ({ navigation }) => {
             </View>
             <View style={styles.container}>
                 <View style={styles.icon}>
-                    <ImageBackground style={{ width: 40, height: 40 }} source={require('../../../assets/in-app-icons/percent.png')} />
+                    <ImageBackground style={{ width: 40, height: 40 }} source={require('../../../../assets/in-app-icons/percent.png')} />
                 </View>
                 <View style={styles.inner}>
                     <Text style={styles.text}>На кредит</Text>
@@ -48,7 +50,7 @@ export const ChooseScreen = ({ navigation }) => {
             </View>
             <View style={styles.container}>
                 <View style={styles.icon}>
-                    <ImageBackground style={{ width: 40, height: 40 }} source={require('../../../assets/in-app-icons/network.png')} />
+                    <ImageBackground style={{ width: 40, height: 40 }} source={require('../../../../assets/in-app-icons/network.png')} />
                 </View>
                 <View style={styles.inner}>
                     <Text style={styles.text}>На брокерский счет или ИИС</Text>
@@ -56,7 +58,7 @@ export const ChooseScreen = ({ navigation }) => {
             </View>
             <View style={styles.container}>
                 <View style={styles.icon}>
-                    <ImageBackground style={{ width: 40, height: 40 }} source={require('../../../assets/in-app-icons/person.png')} />
+                    <ImageBackground style={{ width: 40, height: 40 }} source={require('../../../../assets/in-app-icons/person.png')} />
                 </View>
                 <View style={styles.inner}>
                     <Text style={styles.text}>Юридическому лицу или ИП</Text>
@@ -64,7 +66,7 @@ export const ChooseScreen = ({ navigation }) => {
             </View>
             <View style={styles.container}>
                 <View style={styles.icon}>
-                    <ImageBackground style={{ width: 40, height: 40 }} source={require('../../../assets/in-app-icons/tower.png')} />
+                    <ImageBackground style={{ width: 40, height: 40 }} source={require('../../../../assets/in-app-icons/tower.png')} />
                 </View>
                 <View style={[styles.inner, { borderBottomWidth: 0 }]}>
                     <Text style={styles.text}>В бюджетную организацию</Text>

@@ -1,24 +1,39 @@
 import { useState } from 'react'
 import { View, Text, ImageBackground, TouchableOpacity } from 'react-native'
-import { AppLoader } from '../../components/AppLoader'
-import { THEME } from '../../config'
+import { useDispatch } from 'react-redux';
+import { AppLoader } from '../../../components/AppLoader'
+import { onlyDigits, THEME } from '../../../config'
+import { toCard, toBill } from '../../../store/actions/transactionActions';
 
 const wait = timeout => {
-    return new Promise(resolve => setTimeout(resolve, timeout));
-};
-
+    return new Promise(resolve => {setTimeout(resolve, timeout)});
+}
 export const Confirm = ({ route, navigation }) => {
-    const [refreshing, setRefreshing] = useState(false);
-    
+    const [refreshing, setRefreshing] = useState(true);
+    const dispatch = useDispatch()
+    const { amount, balance } = route.params
+    const transactionHandler = () => {
+        dispatch(toCard({
+            title: 'PEREVOD S DEPOSITA',
+            type: 'Изменение балнаса',
+            amount: onlyDigits(amount)
+        }))
+        let d = new Date()
+        dispatch(toBill({
+            type: 'Денежный перевод - снятие',
+            date: d.getDate()+'.'+(d.getMonth()+1)+'.'+d.getFullYear(),
+            amount: '-' + onlyDigits(amount)
+        }))
+        navigation.navigate('Success')
+    }
 
     if (refreshing) {
-        const f = async () => await wait(1000).then(() => {setRefreshing(false); navigation.navigate('Success')});
+        const f = async () => await wait(1000).then(() => {setRefreshing(false);});
         f()
         return (
             <AppLoader size={'large'} />
         )
     }
-    const { amount } = route.params
 
     return (
         <View style={{ backgroundColor: '#fff', flex: 1, paddingHorizontal: 20, paddingVertical: 15, alignItems: 'center', justifyContent: 'space-between' }}>
@@ -28,11 +43,11 @@ export const Confirm = ({ route, navigation }) => {
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', height: 53 }}>
                             <View style={{ width: 40, height: 40, backgroundColor: THEME.MENU_COLOR, alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
-                                <ImageBackground style={{ width: 22, height: 22 }} source={require('../../../assets/in-app-icons/document.png')}/>
+                                <ImageBackground style={{ width: 22, height: 22 }} source={require('../../../../assets/in-app-icons/document.png')}/>
                             </View>
                             <View style={{ height: '100%', flexDirection: 'column' , marginLeft: 18, justifyContent: 'space-between' }} >
                                 <Text style={{ fontSize: 16,  }}>Управляй процентом</Text>
-                                <Text style={{ fontFamily: 'Inter', fontSize: 16 }}>{THEME.MONEY} ₽</Text>
+                                <Text style={{ fontFamily: 'Inter', fontSize: 16 }}>{balance.bill} ₽</Text>
                             </View>
                         </View>
                     </View>
@@ -43,12 +58,12 @@ export const Confirm = ({ route, navigation }) => {
                         <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center' }}>
                             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', }}>
                                 <View style={{ height: 50, width: THEME.WIDTH*0.1, marginRight: 17, justifyContent: 'center' }}>
-                                    <ImageBackground style={{ width: 44, height: 29 }} source={require('../../../assets/in-app-icons/visa.png')} />
+                                    <ImageBackground style={{ width: 44, height: 29 }} source={require('../../../../assets/in-app-icons/visa.png')} />
                                 </View>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between'}}>
                                     <View style={{ flexDirection: 'column', justifyContent: 'space-between', backgroundColor: '' }}>
                                         <Text style={{ fontSize: 15 }}>Дебетовая карта</Text>
-                                        <Text style={{ fontFamily: 'Inter', fontSize: 15, color: '#000' }}>{THEME.CARD_MONEY} ₽</Text>
+                                        <Text style={{ fontFamily: 'Inter', fontSize: 15, color: '#000' }}>{balance.card} ₽</Text>
                                     </View>
                                     <Text style={{ marginTop: 2,color: THEME.BORDER_COLOR, fontWeight: '700' }}>  {THEME.CARD}</Text> 
                                 </View>
@@ -79,7 +94,7 @@ export const Confirm = ({ route, navigation }) => {
                 </View>
 
             </View>
-            <TouchableOpacity activeOpacity={0.8} style={{ width: '100%' }} onPress={setRefreshing}>
+            <TouchableOpacity activeOpacity={0.8} style={{ width: '100%' }} onPress={transactionHandler}>
                 <View style={{ backgroundColor: THEME.MAIN_COLOR, width: '100%', alignItems: 'center', justifyContent: 'center', height: 45, borderRadius: 12, }} disabled={true}>
                     <Text style={{ color: '#fff', fontFamily: 'Inter' }}>Перевести</Text>
                 </View>

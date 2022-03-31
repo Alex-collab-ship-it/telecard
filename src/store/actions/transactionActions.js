@@ -1,23 +1,44 @@
 import { DB } from "../../db"
-import { LOAD_BILL, LOAD_CARD } from "../types"
+import { toRoubles } from "../../config"
+import { ADD_CARD, LOAD_BALANCE, LOAD_BILL, LOAD_CARD } from "../types"
 
 
-export const loadBill = () => {
-    return async dispatch => {
-        const data = await DB.getTransactions('bill')
-        dispatch({
-            type: LOAD_BILL,
-            payload: data
-        })
-    }
+export const load = (table) => async dispatch => {
+    const data = await DB.getTransactions(table)
+    dispatch({
+        type: table === 'bill' ? LOAD_BILL : LOAD_CARD,
+        payload: data
+    })
 }
 
-export const loadCard = () => {
-    return async dispatch => {
-        const data = await DB.getTransactions('card')
-        dispatch({
-            type: LOAD_CARD,
-            payload: data
-        })
-    }
+
+export const loadBalance = () => async dispatch => {
+    const card = await DB.loadBalance('card')
+    const bill = await DB.loadBalance('bill') 
+    dispatch({
+        type: LOAD_BALANCE,
+        payload: {
+            card: toRoubles(card).replace(' ₽', ''),
+            bill: toRoubles(bill).replace(' ₽', '')
+        }
+    })
 }
+
+export const toBill = (data) => async dispatch => {
+    const result = await DB.addBill(data)
+
+    dispatch({
+        type: ADD_CARD,
+        payload: result
+    })
+}
+
+export const toCard = (data) => async dispatch => {
+    const result = await DB.addCard(data)
+
+    dispatch({
+        type: ADD_CARD,
+        payload: result
+    })
+}
+
